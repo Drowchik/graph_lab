@@ -78,3 +78,16 @@ TEST(EdgeTest, erase_edge) {
 	EXPECT_EQ(true, a.has_vertex(3));
 	EXPECT_EQ(false, a.has_vertex(9));
 }
+
+TEST(Another_graph_test, test) {
+	Graph<int> a;
+	a.add_vertex(5);
+	a.add_vertex(2);
+	a.add_vertex(3);
+	EXPECT_EQ(3, a.order());
+	a.add_edge(5, 7, 8);
+	a.add_edge(5, 2, 2);
+	EXPECT_EQ(4, a.order());
+	EXPECT_EQ(2, a.degree(5));
+	EXPECT_EQ(0, a.degree(2));
+}

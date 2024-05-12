@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -95,5 +96,21 @@ namespace Graph_lab {
 			}
 			return os;
 		}
+		
+		size_t order() const {
+			return data.size();
+		}
+
+		size_t degree(const Vertex& v) const {
+			return data.at(v).size();
+		}
+
+		std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
+			return;
+		}
+		std::vector<Vertex>  walk(const Vertex& start_vertex) const {
+
+		}
+
 	};
 }
