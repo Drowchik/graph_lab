@@ -21,9 +21,10 @@ namespace Graph_lab {
 		bool remove_vertex(const Vertex& v) {
 			if (has_vertex(v)) {
 				for (auto& ver : data) {
-					for (auto& edge : ver.second) {
-						if (edge.first == v) {
-							ver.second.erase();
+					for (auto it = ver.second.begin(); it != ver.second.end(); it++) {
+						if (it->first == v) {
+							ver.second.erase(it);
+							break;
 						}
 					}
 				}
@@ -41,6 +42,9 @@ namespace Graph_lab {
 		}
 
 		void add_edge(const Vertex& v_from, const Vertex& v_to, const Distance& d) {
+			if (!has_vertex(v_to)){
+				add_vertex(v_to);
+			}
 			data[v_from].push_back(make_pair(v_to, d));
 		}
 
