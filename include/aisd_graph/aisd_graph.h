@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <stack>
 
@@ -105,11 +106,29 @@ namespace Graph_lab {
 			return data.at(v).size();
 		}
 
-		std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
-			return;
-		}
+		//std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
+		//	return;
+		//}
 		std::vector<Vertex>  walk(const Vertex& start_vertex) const {
-
+			vector<Vertex> res;
+			unordered_set<Vertex> visited;
+			stack<Vertex> st;
+			st.push(start_vertex);
+			while (!st.empty()) {
+				auto cur = st.top();
+				st.pop();
+				if (visited.count(cur) > 0) {
+					continue;
+				}
+				visited.insert(cur);
+				res.push_back(cur);
+				for (const auto& ver : data.at(cur)) {
+					if (visited.count(ver.first) == 0) {
+						st.push(ver.first); 
+					}
+				}
+			}
+			return res;
 		}
 
 	};
