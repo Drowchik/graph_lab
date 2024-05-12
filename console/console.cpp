@@ -9,8 +9,11 @@ int main() {
 	a.add_vertex(5);
 	a.add_vertex(2);
 	a.add_vertex(3);
-	cout<<a.has_vertex(5)<<endl;
-	a.remove_vertex(5);
-
+	a.add_edge(5, 7, 8);
+	a.add_edge(5, 2, 4);
+	cout << a.has_edge(5, 7, 8) << endl<<endl;
+	a.print() << endl;
+	a.remove_edge(5, 7);
+	a.print() << endl;
 	return 0;
 }
