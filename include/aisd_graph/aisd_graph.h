@@ -106,9 +106,39 @@ namespace Graph_lab {
 			return data.at(v).size();
 		}
 
-		//std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
-		//	return;
-		//}
+		std::vector<pair<Vertex, Distance>> shortest_path(const Vertex& from, const Vertex& to) const {
+			std::unordered_map<Vertex, Distance> distances;
+			for (const auto& vertex : data) {
+				distances[vertex.first] = std::numeric_limits<Distance>::max();
+			}
+			distances[from] = 0;
+
+			for (const auto& [vertex, edges] : data) {
+				for (const auto& [neighbor, distance] : edges) {
+					if (distances[vertex] + distance < distances[neighbor]) {
+						distances[neighbor] = distances[vertex] + distance;
+					}
+				}
+			}
+
+			std::vector<pair<Vertex, Distance>> path;
+			if (distances[to] != std::numeric_limits<Distance>::max()) {
+				Vertex current = to;
+				while (current != from) {
+					for (const auto& [vertex, edges] : data) {
+						for (const auto& [neighbor, distance] : edges) {
+							if (current == neighbor && distances[vertex] + distance == distances[current]) {
+								path.emplace_back(vertex, distance);
+								current = vertex;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			return path;
+		}
 		std::vector<Vertex>  walk(const Vertex& start_vertex) const {
 			vector<Vertex> res;
 			unordered_set<Vertex> visited;
