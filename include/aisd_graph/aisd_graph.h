@@ -200,6 +200,6 @@ namespace Graph_lab {
 
 	template <typename Vertex>
 	void printVertex(const Vertex& vertex) {
-		std::cout << "Visited vertex with id: " << vertex << std::endl;
+		cout << "Visited vertex with id: " << vertex << endl;
 	}
 }
