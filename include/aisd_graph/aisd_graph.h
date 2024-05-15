@@ -1,8 +1,10 @@
 #include <iostream>
+#include <functional>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 #include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -37,7 +39,7 @@ namespace Graph_lab {
 		}
 		vector<Vertex> verteces() const {
 			vector<Vertex> result;
-			for (auto& ver : data) {
+			for (const auto& ver : data) {
 				result.push_back(ver.first);
 			}
 			return result;
@@ -84,7 +86,7 @@ namespace Graph_lab {
 			return false;
 		}
 
-		vector<pair<Vertex, Distance>> edges(const Vertex& vertex) const {
+		const vector<pair<Vertex, Distance>>& edges(const Vertex& vertex) const {
 			return data.at(vertex);
 		}
 		ostream& print(ostream& os = std::cout) {
@@ -139,8 +141,7 @@ namespace Graph_lab {
 
 			return path;
 		}
-		std::vector<Vertex>  walk(const Vertex& start_vertex) const {
-			vector<Vertex> res;
+		void walk(const Vertex& start_vertex, std::function<void(const Vertex&)> action) const {
 			unordered_set<Vertex> visited;
 			stack<Vertex> st;
 			st.push(start_vertex);
@@ -151,15 +152,54 @@ namespace Graph_lab {
 					continue;
 				}
 				visited.insert(cur);
-				res.push_back(cur);
+				action(cur);
 				for (const auto& ver : data.at(cur)) {
 					if (visited.count(ver.first) == 0) {
 						st.push(ver.first); 
 					}
 				}
 			}
-			return res;
 		}
 
+		Vertex task3() {
+			
+			unordered_map<Vertex, Distance> distances;
+			for (const auto& ver: data) {
+				distances[ver.first] = numeric_limits<Distance>::max();
+			}
+
+			queue<Vertex> queue;
+			queue.push(data.begin()->first);
+			distances[data.begin()->first] = 0;
+
+			while (!queue.empty()) {
+				Vertex current = queue.front();
+				queue.pop();
+
+				for (const auto& [neighbor, distance] : data[current]) {
+					int newDistance = distances[current] + distance;
+					if (newDistance < distances[neighbor]) {
+						distances[neighbor] = newDistance;
+						queue.push(neighbor);
+					}
+				}
+			}
+
+			int maxDistance = -1;
+			Vertex fracture_clinic;
+			for (const auto& [vertex, distance] : distances) {
+				if (distance > maxDistance) {
+					maxDistance = distance;
+					fracture_clinic = vertex;
+				}
+			}
+
+			return fracture_clinic;
+		}
 	};
+
+	template <typename Vertex>
+	void printVertex(const Vertex& vertex) {
+		std::cout << "Visited vertex with id: " << vertex << std::endl;
+	}
 }
