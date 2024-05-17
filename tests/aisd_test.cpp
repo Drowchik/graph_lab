@@ -35,7 +35,7 @@ TEST(VertexTest, verteces) {
 	a.add_vertex(3);
 
 	vector<int> b = { 5, 2, 3 };
-	EXPECT_EQ(b, a.verteces());
+	EXPECT_EQ(b, a.vertices());
 }
 
 

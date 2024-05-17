@@ -28,7 +28,6 @@ namespace Graph_lab {
 					for (auto it = ver.second.begin(); it != ver.second.end(); it++) {
 						if (it->first == v) {
 							ver.second.erase(it);
-							break;
 						}
 					}
 				}
@@ -37,7 +36,7 @@ namespace Graph_lab {
 			}
 			return false;
 		}
-		vector<Vertex> verteces() const {
+		vector<Vertex> vertices() const {
 			vector<Vertex> result;
 			for (const auto& ver : data) {
 				result.push_back(ver.first);
@@ -89,6 +88,7 @@ namespace Graph_lab {
 		const vector<pair<Vertex, Distance>>& edges(const Vertex& vertex) const {
 			return data.at(vertex);
 		}
+
 		ostream& print(ostream& os = std::cout) {
 			for (auto& ver : data) {
 				os << ver.first << " : ";
@@ -116,9 +116,18 @@ namespace Graph_lab {
 			distances[from] = 0;
 
 			for (const auto& [vertex, edges] : data) {
-				for (const auto& [neighbor, distance] : edges) {
-					if (distances[vertex] + distance < distances[neighbor]) {
-						distances[neighbor] = distances[vertex] + distance;
+				for (const auto& [to_ver, distance] : edges) {
+					if (distances[vertex] + distance < distances[to_ver]) {
+						distances[to_ver] = distances[vertex] + distance;
+					}
+				}
+			}
+			
+
+			for (const auto& [vertex, edges] : data) {
+				for (const auto& [to_ver, distance] : edges) {
+					if (distances[vertex] + distance < distances[to_ver]) {
+						throw("All bad");
 					}
 				}
 			}
@@ -126,6 +135,7 @@ namespace Graph_lab {
 			std::vector<pair<Vertex, Distance>> path;
 			if (distances[to] != std::numeric_limits<Distance>::max()) {
 				Vertex current = to;
+				path.emplace_back(to, 0);
 				while (current != from) {
 					for (const auto& [vertex, edges] : data) {
 						for (const auto& [neighbor, distance] : edges) {
@@ -138,9 +148,10 @@ namespace Graph_lab {
 					}
 				}
 			}
-
+			reverse(path.begin(), path.end());
 			return path;
 		}
+
 		void walk(const Vertex& start_vertex, std::function<void(const Vertex&)> action) const {
 			unordered_set<Vertex> visited;
 			stack<Vertex> st;
@@ -162,39 +173,28 @@ namespace Graph_lab {
 		}
 
 		Vertex task3() {
-			
-			unordered_map<Vertex, Distance> distances;
-			for (const auto& ver: data) {
-				distances[ver.first] = numeric_limits<Distance>::max();
-			}
+			Vertex furthest_vertex = -1;
+			double max_average_distance = -1;
 
-			queue<Vertex> queue;
-			queue.push(data.begin()->first);
-			distances[data.begin()->first] = 0;
+			for (const auto& [vertex, edges] : data) {
+				if (edges.empty()) {
+					continue;
+				}
 
-			while (!queue.empty()) {
-				Vertex current = queue.front();
-				queue.pop();
+				double total_distance = 0;
+				for (const auto& vec : edges) {
+					total_distance += vec.second;
+				}
 
-				for (const auto& [neighbor, distance] : data[current]) {
-					int newDistance = distances[current] + distance;
-					if (newDistance < distances[neighbor]) {
-						distances[neighbor] = newDistance;
-						queue.push(neighbor);
-					}
+				double average_distance = total_distance / edges.size();
+
+				if (average_distance > max_average_distance) {
+					max_average_distance = average_distance;
+					furthest_vertex = vertex;
 				}
 			}
 
-			int maxDistance = -1;
-			Vertex fracture_clinic;
-			for (const auto& [vertex, distance] : distances) {
-				if (distance > maxDistance) {
-					maxDistance = distance;
-					fracture_clinic = vertex;
-				}
-			}
-
-			return fracture_clinic;
+			return furthest_vertex;
 		}
 	};
 
